@@ -8,6 +8,8 @@ leaves like sick leave, casual leave, etc. This schema is used to
 establish the leaves of a user.
 """
 
+from enum import Enum
+
 from pydantic import (
     BaseModel,
     computed_field,
@@ -16,21 +18,54 @@ from pydantic import (
 
 from autoholidays.errors import InvalidLeaveDays
 
+
+class ENUMDays(Enum):
+    """
+    ENUM for the Days of the Week
+
+    The days of the week is zero-indexed and starts from Monday. The
+    values are in-sync with the :mod:`datetime` module in Python, thus
+    providing backward compatibility.
+
+    .. code-block:: python
+
+        ENUMDays.SUNDAY # get the object for Sunday
+
+        # to get/search for a particular day, use:
+        print(ENUMDays(2))
+        >> ENUMDays.WEDNESDAY
+
+    The enum provides to distinct useful methods - :attr:`.name` to
+    get the name defined in the enum and :attr:`.value` to get the
+    value associated with the enum.
+
+    Once the enum is extended to other pydantic base models, we can
+    directly use the value without field validation as the value is
+    already validated by the enum.
+    """
+
+    MONDAY    = 0
+    TUESDAY   = 1
+    WEDNESDAY = 2
+    THURSDAY  = 3
+    FRIDAY    = 4
+    SATURDAY  = 5
+    SUNDAY    = 6
+
+
 class WeeklyLeave(BaseModel):
     """
-    Weekly Leave Schema Definition
+    Weekly-Off Leave Schema/Construct Definition
 
     The weekly leave schema defines the days of the week when a user
     has a holiday. The days are typically Sunday and Saturday, and
     is same as the weekly off days for an organization.
 
-    :type  days: list[int]
-    :param days: A list of integers representing the days of the week
-        when the user has a holiday. The integers should be
-        in the range of 0-6, where 0 is Sunday and 6 is Saturday. The
-        zerobased indexed is preserved to provide backward compatibility
-        with the :mod:`calendar` module in Python. The default value
-        is [0, 6], which means Sunday and Saturday.
+    :type  days: set[ENUMDays]
+    :param days: A set of :class:`ENUMDays` enum values representing
+        the days of the week when a user has a holiday. The days are
+        typically Sunday and Saturday, and is same as the weekly off.
+        Defaults to Saturday and Sunday.
 
     Example Usage
     -------------
@@ -44,20 +79,15 @@ class WeeklyLeave(BaseModel):
         import autoholidays as ah
 
         # let's define a day to simulate the leave
-        sunday = dt.date(2025, 5, 4)
-        monday = dt.date(22025, 5, 5)
+        cur_date = dt.date(2025, 5, 4)
 
         # let's define the weekly leave construct with defaults
         weekly = ah.utils.WeeklyLeave()
+        dayset = set([day.value for day in weekly.days])
 
         # check for each day if it is a weekly-off day or not
-        # print(f"DATE: {sunday} (= Day of Week : {sunday.weekday()})")
-        print(f"  >> Weekly Off: {sunday.weekday() in weekly.days}")
+        print(f"Weekly Off: {cur_date.weekday() in dayset}")
         >> Weekly Off: True
-
-        # print(f"DATE: {monday} (= Day of Week : {monday.weekday()})")
-        print(f"  >> Weekly Off: {monday.weekday() in weekly.days}")
-        >> Weekly Off: False
 
     Leave Days Calculation
     ----------------------
@@ -77,32 +107,10 @@ class WeeklyLeave(BaseModel):
     be availed is 5 (Monday to Friday), excluding the weekly-off days.
     """
 
-    days : set[int] = {0, 6} # Sunday and Saturday
-
-
-    @field_validator("days")
-    @classmethod
-    def validate_days(cls, value : set[int]) -> set[int]:
-        """
-        Validate the days of the week for weekly leave.
-
-        The days should be in the range of 0-6, where 0 is Sunday and
-        6 is Saturday. The zerobased indexed is preserved to provide
-        backward compatibility with the :mod:`calendar` module in Python.
-
-        :param value: A list of integers representing the days of the week
-            when the user has a holiday.
-
-        :return: A list of integers representing the days of the week
-            when the user has a holiday.
-        """
-
-        min_, max_ = min(value), max(value)
-        
-        if min_ < 0 or max_ > 6:
-            raise InvalidLeaveDays(f"Invalid leave days: {value}.")
-
-        return value
+    days : set[ENUMDays] = {
+        ENUMDays.SUNDAY,
+        ENUMDays.SATURDAY
+    }
 
 
 class CustomLeaves(BaseModel):
