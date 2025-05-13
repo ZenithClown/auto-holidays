@@ -8,7 +8,12 @@ leaves like sick leave, casual leave, etc. This schema is used to
 establish the leaves of a user.
 """
 
-from pydantic import BaseModel, field_validator
+from pydantic import (
+    BaseModel,
+    computed_field,
+    field_validator
+)
+
 from autoholidays.errors import InvalidLeaveDays
 
 class WeeklyLeave(BaseModel):
@@ -54,3 +59,32 @@ class WeeklyLeave(BaseModel):
             raise InvalidLeaveDays(f"Invalid leave days: {value}.")
 
         return value
+
+
+class CustomLeaves(BaseModel):
+    """
+    A Custom Leaves Schema Definition
+
+    A custom leave is any type of a named leave that a user can take,
+    based on the organization policy. The custom leaves base model
+    also allow to put any type of leave constraint on the leave days.
+
+    :type  name: str
+    :param name: A string representing the name of the custom leave.
+        The name should be a valid string and should not be empty.
+    """
+
+    name : str
+
+    @computed_field
+    @property
+    def shortname(self) -> str:
+        """
+        A Short Name for the Custom Leave
+        
+        The short name is an abbreviation of the custom leave name.
+        The short name is auto calculated from the custom leave name
+        by getting the first letter of each word in the name.
+        """
+
+        return "".join([word[0] for word in self.name.split()]).upper()
