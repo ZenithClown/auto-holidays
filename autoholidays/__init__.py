@@ -1,21 +1,22 @@
 # -*- encoding: utf-8 -*-
 
 """
-Python GIT & Docker Template for PyPI Package
+A Modern Automatic Optimal Holiday Planner
 
-The package provides a template repository to create a python package,
-that can be seamlessly deployed on PyPI and configured via GIT and
-Docker for added capabilities.
+The modern era calls for a modern optimal holiday planner that can
+find the most optimal holidays for you or a group of persons. The
+module is designed to be simple and easy to use with simple APIs which
+can be extended to create a full-fledged application.
 
-@author: Debmalya Pramanik
-@copywright: 2021; Debmalya Pramanik
+@author: Debmalya Pramanik (ZenithClown)
+@copywright: 2021; Debmalya Pramanik (ZenithClown)
 """
 
 import os
 
 # ? package follows https://peps.python.org/pep-0440/
 # ? https://python-semver.readthedocs.io/en/latest/advanced/convert-pypi-to-semver.html
-__version__ = open(os.path.join(os.path.dirname(__file__), 'VERSION'), 'r').read().strip()
+__version__ = open(os.path.join(os.path.dirname(__file__), "VERSION"), "r").read().strip()
 
 # ! let's check for package hard dependencies which must be available
 hard_dependencies = [] # all should be available in ../requirements.txt
@@ -32,4 +33,3 @@ if missing_dependencies:
     raise ImportError(f"Missing hard dependencies: {missing_dependencies}")
 
 # init-time Option Registrations
-from .api import * # noqa: F401, F403 # pyright: ignore[reportMissingImports]
