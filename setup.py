@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-### --- IF REQUIRED - ADD LICENSING INFORMATION (HERE) --- ###
-
 import os
 from setuptools import setup
 from setuptools import find_packages
 
-PKG = "pkg-name" # Edit with your package name
+PKG = "autoholidays" # Edit with your package name
 
 # Version File Implementation: https://stackoverflow.com/a/7071358
-VERSIONFILE = os.path.join(PKG, 'VERSION')
+VERSIONFILE = os.path.join(PKG, "VERSION")
 try:
-    VERSION = open(VERSIONFILE, 'rt').read() # always read as str()
+    VERSION = open(VERSIONFILE, "r").read() # always read as str()
 except FileNotFoundError as err:
     raise RuntimeError(f'is PKG = {PKG} correctly defined? {err}')
 
@@ -25,7 +23,7 @@ setup(
     author       = "Debmalya Pramanik",
     author_email = "",
 
-    description                   = "<SHORT PROJECT DESCRIPTION>",
+    description                   = "Create an Optimal Holiday Planner",
     long_description              = long_description,
     long_description_content_type = "text/markdown",
 
