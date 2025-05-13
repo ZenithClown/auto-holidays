@@ -113,6 +113,26 @@ class WeeklyLeave(BaseModel):
     }
 
 
+class CustomLeaveConstraint(BaseModel):
+    """
+    Allow to Put a Constraint on the Custom Leave Days
+    
+    The constraint is a advanced usage, that helps to put limitations
+    on the custom leave days. For example, many organization do not
+    allow to take a leave on a particular day of the week, or a
+    particular day of the month. Another example of a constraint
+    could be that an organization only not allow to take a particular
+    leave n-times a year also maybe limiting the number of days.
+
+    :type  limitweekdays: set[int]
+    :param limitweekdays: A set of integers representing the days of
+        the week where the user is not allowed to take a leave.
+        Defaults to None.
+    """
+
+    limitweekdays : set[ENUMDays] = set()
+
+
 class CustomLeaves(BaseModel):
     """
     A Custom Leaves Schema Definition
