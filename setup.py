@@ -27,7 +27,7 @@ setup(
     long_description              = long_description,
     long_description_content_type = "text/markdown",
 
-    url         = "<project url>",
+    # url         = "<project url>",
     packages    = find_packages(),
     classifiers = [
         "Programming Language :: Python :: 3",
