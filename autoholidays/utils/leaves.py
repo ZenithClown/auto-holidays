@@ -31,6 +31,50 @@ class WeeklyLeave(BaseModel):
         zerobased indexed is preserved to provide backward compatibility
         with the :mod:`calendar` module in Python. The default value
         is [0, 6], which means Sunday and Saturday.
+
+    Example Usage
+    -------------
+
+    The weeklc construct is significantly useful to find if a particular
+    day is a weekly-off day or not. For example:
+
+    .. code-block:: python
+
+        import datetime as dt
+        import autoholidays as ah
+
+        # let's define a day to simulate the leave
+        sunday = dt.date(2025, 5, 4)
+        monday = dt.date(22025, 5, 5)
+
+        # let's define the weekly leave construct with defaults
+        weekly = ah.utils.WeeklyLeave()
+
+        # check for each day if it is a weekly-off day or not
+        # print(f"DATE: {sunday} (= Day of Week : {sunday.weekday()})")
+        print(f"  >> Weekly Off: {sunday.weekday() in weekly.days}")
+        >> Weekly Off: True
+
+        # print(f"DATE: {monday} (= Day of Week : {monday.weekday()})")
+        print(f"  >> Weekly Off: {monday.weekday() in weekly.days}")
+        >> Weekly Off: False
+
+    Leave Days Calculation
+    ----------------------
+
+    The leave days considers the days of a week and calculates the
+    required number of leaves to be availaed. The weekly construct now
+    can be used to calculate the number of leaves excluding the weekly
+    off days.
+
+    .. code-block:: text
+
+        S M T W T F S
+        0 1 2 3 4 5 6
+        0 1 1 1 1 1 0 # number of leaves required
+
+    Considering the default weekly-off days, the number of leaves to
+    be availed is 5 (Monday to Friday), excluding the weekly-off days.
     """
 
     days : set[int] = {0, 6} # Sunday and Saturday
