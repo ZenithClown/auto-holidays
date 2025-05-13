@@ -27,11 +27,11 @@ setup(
     long_description              = long_description,
     long_description_content_type = "text/markdown",
 
-    # url         = "<project url>",
+    url         = "https://github.com/ZenithClown/auto-holidays",
     packages    = find_packages(),
     classifiers = [
         "Programming Language :: Python :: 3",
-        # "License :: OSI Approved :: Apache Software License" # Change as Required
+        "License :: OSI Approved :: MIT License"
     ],
     python_requires  = ">=3.10",  # Specify Requirement
     install_requires = [] # Add/Edit as Required

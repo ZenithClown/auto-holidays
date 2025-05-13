@@ -8,12 +8,12 @@
 import os
 import sys
 
-PKG = "pkg-name" # Edit with your package name
+PKG = "autoholidays" # Edit with your package name
 
 # ? insert the project paths to let sphinx recognize/find packages
 sys.path.append(os.path.abspath(os.path.join("..")))
 
-project = "Package Name"
+project = "Optimal Auto-Holidays"
 copyright = "2021, Debmalya Pramanik"
 author = "Debmalya Pramanik"
 release = open(os.path.abspath(os.path.join("..", PKG, "VERSION")), "r").read()
