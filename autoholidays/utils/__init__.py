@@ -8,4 +8,7 @@ while may/may not be directly related to the main functionality of the
 package but is related to planning of holidays.
 """
 
-from autoholidays.utils.leaves import *
+from autoholidays.utils import leaves
+from autoholidays.utils import person
+from autoholidays.utils import calender
+from autoholidays.utils import holidays
