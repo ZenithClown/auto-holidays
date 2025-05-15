@@ -162,6 +162,15 @@ class CompWeeklyLeave(BaseModel):
     )
 
 
+class LRBoundary(BaseModel):
+    """
+    Create a Leave Range (LR) Boundary for Various Usages
+    """
+
+    min_value : int = Field(0, ge = 0)
+    max_value : int = Field(float("inf"), ge = 0)
+
+
 class CustomLeaveConstraint(BaseModel):
     """
     Allow to Put a Constraint on the Custom Leave Days
@@ -199,18 +208,8 @@ class CustomLeaveConstraint(BaseModel):
 
     # allow to put a boundary of leave, like PL >= 4 days at a time
     # or, PL can be applied only twice a year (or a cycle)
-    avail_limit : tuple[int] = Field(
-        tuple([0, float("inf")]),
-        min_length = 2, # min and max value only
-        max_length = 2
-    )
-
-    
-    avail_limit_per_cycle : tuple[int] = Field(
-        tuple([0, float("inf")]),
-        min_length = 2, # min and max value only
-        max_length = 2
-    )
+    avail_limit : LRBoundary
+    avail_limit_per_cycle : LRBoundary
 
     # only valid for the a set of days
     limit_to_dates : set[MonthDayConstruct] = set()
