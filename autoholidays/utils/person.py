@@ -18,6 +18,8 @@ from autoholidays.utils.leaves import (
     CustomLeaves,
     CompWeeklyLeave
 )
+
+from autoholidays.utils.holidays import HolidayConstruct
 from autoholidays.utils.calender import MonthDayConstruct
 
 class PersonConstruct(BaseModel):
@@ -49,10 +51,11 @@ class PersonConstruct(BaseModel):
     :param custom_leaves: A tuple of :class:`CustomLeaves` objects
         which defines the custom leaves for a person.
 
-    :type  additional_holidays: tuple[dt.date]
-    :param additional_holidays: A tuple of :class:`dt.date` objects
-        which defines the additional holidays for a person for the
-        given planning cycle.
+    :type  additional_holidays: tuple[HolidayConstruct]
+    :param additional_holidays: A tuple of :class:`HolidayConstruct`
+        objects which defines the additional holidays for a person
+        for the given planning cycle. Check class attributes for field
+        names and their descriptions.
     """
 
     name : str
@@ -67,4 +70,4 @@ class PersonConstruct(BaseModel):
     custom_leaves = tuple[CustomLeaves]
 
     # additional assigned holidays
-    additional_holidays = tuple[dt.date]
+    additional_holidays = tuple[HolidayConstruct]
