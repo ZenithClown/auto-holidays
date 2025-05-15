@@ -321,34 +321,3 @@ class CustomLeaves(BaseModel):
     @classmethod
     def __validate_credit_balance__(cls, values : list[int]) -> list[int]:
         assert min(values) >= 0, f"All of {values} must be non-negative"
-
-
-class LeaveCycle(BaseModel):
-    """
-    Create a Leave Cycle Base Validation Model
-    """
-
-    _s : MonthDayConstruct
-    _e : MonthDayConstruct
-
-    year : int
-
-
-    @computed_field
-    @property
-    def start(self) -> dt.date:
-        return dt.date(self.year, self._s.month, self._s.day)
-
-
-    @computed_field
-    @property
-    def end(self) -> dt.date:
-        return dt.date(
-            self.year if self._s.month <= self._e.month else self.year + 1,
-            self._e.month, self._e.day
-        )
-
-    @computed_field
-    @property
-    def duration(self) -> int:
-        return (self.end - self.start).days

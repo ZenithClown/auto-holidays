@@ -14,13 +14,12 @@ import datetime as dt
 from pydantic import BaseModel
 
 from autoholidays.utils.leaves import (
-    LeaveCycle,
     CustomLeaves,
     CompWeeklyLeave
 )
 
 from autoholidays.utils.holidays import HolidayConstruct
-from autoholidays.utils.calender import MonthDayConstruct
+from autoholidays.utils.calender import MonthDayConstruct, AnyCycle
 
 class PersonConstruct(BaseModel):
     """
@@ -67,7 +66,7 @@ class PersonConstruct(BaseModel):
     """
 
     name : str
-    cycle : LeaveCycle = LeaveCycle(
+    cycle : AnyCycle = AnyCycle(
         year = dt.date.today().year,
         _s = MonthDayConstruct(day = 1, month = 1),
         _e = MonthDayConstruct(day = 31, month = 12)

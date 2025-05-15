@@ -9,8 +9,10 @@ objects may/maynot be directly related to the python in-built
 module which deals with calender days and calculations around it.
 """
 
+import datetime as dt
+
 from enum import Enum
-from pydantic import Field, BaseModel
+from pydantic import Field, BaseModel, computed_field
 
 from autoholidays.errors import InvalidDayNum
 
@@ -74,3 +76,34 @@ class MonthDayConstruct(BaseModel):
 
     day : int = Field(ge = 1, le = 31)
     month : int = Field(ge = 1, le = 12)
+
+
+class AnyCycle(BaseModel):
+    """
+    Create a Cycle Base Validation Model
+    """
+
+    _s : MonthDayConstruct
+    _e : MonthDayConstruct
+
+    year : int
+
+
+    @computed_field
+    @property
+    def start(self) -> dt.date:
+        return dt.date(self.year, self._s.month, self._s.day)
+
+
+    @computed_field
+    @property
+    def end(self) -> dt.date:
+        return dt.date(
+            self.year if self._s.month <= self._e.month else self.year + 1,
+            self._e.month, self._e.day
+        )
+
+    @computed_field
+    @property
+    def duration(self) -> int:
+        return (self.end - self.start).days
