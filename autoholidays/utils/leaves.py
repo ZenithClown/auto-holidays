@@ -175,13 +175,41 @@ class CompWeeklyLeave(BaseModel):
 
     # for each week for a day <int("D#".replace("D", ""))> check
     # if the weekly off is valid, example every alternate Saturday
-    D0 : tuple[bool] = tuple([True] * 5)
-    D1 : tuple[bool] = tuple([True] * 5)
-    D2 : tuple[bool] = tuple([True] * 5)
-    D3 : tuple[bool] = tuple([True] * 5)
-    D4 : tuple[bool] = tuple([True] * 5)
-    D5 : tuple[bool] = tuple([True] * 5)
-    D6 : tuple[bool] = tuple([True] * 5)
+    D0 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D1 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D2 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D3 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D4 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D5 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
+    D6 : tuple[bool] = Field(
+        tuple([True] * 5),
+        min_length = 5, # total 5 weeks in a month
+        max_length = 5  # do not allow data leakage/force entry
+    )
 
 
 class CustomLeaveConstraint(BaseModel):
