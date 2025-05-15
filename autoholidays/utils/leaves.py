@@ -162,6 +162,12 @@ class CompWeeklyLeave(BaseModel):
     )
 
 
+    @computed_field
+    @property
+    def day_values(self) -> list[int]:
+        return [day.value for day in list(self.days)]
+
+
 class LRBoundary(BaseModel):
     """
     Create a Leave Range (LR) Boundary for Various Usages
