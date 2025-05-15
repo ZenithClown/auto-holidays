@@ -237,13 +237,47 @@ class CustomLeaveConstraint(BaseModel):
     could be that an organization only not allow to take a particular
     leave n-times a year also maybe limiting the number of days.
 
-    :type  limitweekdays: set[int]
-    :param limitweekdays: A set of integers representing the days of
-        the week where the user is not allowed to take a leave.
-        Defaults to None.
+    :type  limit_days: set[int]
+    :param limit_days: A set of integers representing the days of the
+        week where the user is not allowed to take a leave. Defaults
+        to None (unconstrined).
+
+    :type  avail_limit: tuple[int]
+    :param avail_limit: A tuple of two integers representing the
+        minimum and maximum number of days the user can take a leave.
+        Defaults to (0, float("inf")) (unconstrained).
+
+    :type  avail_limit_per_cycle: tuple[int]
+    :param avail_limit_per_cycle: A tuple of two integers
+        representing the minimum and maximum number of days the user
+        can take a leave in a cycle. Defaults to (0, float("inf"))
+        (unconstrained).
+
+    :type  limit_to_dates: set[MonthDayConstruct]
+    :param limit_to_dates: A set of dates where the leave is applicable,
+        for example in case of an optional holiday which must be the
+        same as a public holiday for the country.
     """
 
-    limitweekdays : set[ENUMDays] = set()
+    limit_days : set[ENUMDays] = set()
+
+    # allow to put a boundary of leave, like PL >= 4 days at a time
+    # or, PL can be applied only twice a year (or a cycle)
+    avail_limit : tuple[int] = Field(
+        tuple([0, float("inf")]),
+        min_length = 2, # min and max value only
+        max_length = 2
+    )
+
+    
+    avail_limit_per_cycle : tuple[int] = Field(
+        tuple([0, float("inf")]),
+        min_length = 2, # min and max value only
+        max_length = 2
+    )
+
+    # only valid for the a set of days
+    limit_to_dates : set[MonthDayConstruct] = set()
 
 
 class CustomLeaves(BaseModel):
@@ -286,6 +320,11 @@ class CustomLeaves(BaseModel):
         attribute is particularly helpful in case of multi-cycle or
         over-lapping cycle leaves.
 
+    :type  constraints: CustomLeaveConstraint
+    :param constraints: A :class:`CustomLeaveConstraint` object which
+        provides advanced capabilities to plan leave. Check the parent
+        class for default values.
+
     Carry Forward Leaves
     --------------------
 
@@ -322,6 +361,9 @@ class CustomLeaves(BaseModel):
 
     # for leaves with carry forward (cf), add desired cf balance
     carry_forward_balance : int = Field(0, ge = 0)
+
+    # ? advanced usage, add leave constraints, all defaults in class
+    constraints : CustomLeaveConstraint = CustomLeaveConstraint()
 
 
     @computed_field
