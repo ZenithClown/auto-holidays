@@ -88,6 +88,14 @@ class CompWeeklyLeave(BaseModel):
         the days of the week when a user has a holiday. The days are
         typically Sunday and Saturday, default value.
 
+    :type  D#: tuple[bool]
+    :param D#: A tuple of boolean values representing each week of a
+        month if the weekly-off is available. For example, an user may
+        have every alternate Saturday as a weekly-off, so we can
+        set a tuple like :attr:`(True, False, True, False, True)`
+        denoting 1st-, 3rd- and 5th-week of the month as weekly-off.
+        Defaults to all true, that is everyday is considered.
+
     Example Usage
     -------------
 
@@ -125,9 +133,6 @@ class CompWeeklyLeave(BaseModel):
             ah.utils.ENUMDays(6)
         })
 
-    TODO: Add a feature to set alternate days of the week as holiday,
-    example, add every 1st- and 3rd- Saturday as holiday.
-
     Leave Days Calculation
     ----------------------
 
@@ -144,12 +149,39 @@ class CompWeeklyLeave(BaseModel):
 
     Considering the default weekly-off days, the number of leaves to
     be availed is 5 (Monday to Friday), excluding the weekly-off days.
+
+    D# Naming Convention
+    -------------------
+
+    The D# naming convention is used to number the days for the ENUM
+    :class:`ENUMDays` representing a valid day. The convention is used
+    as :mod:`pydantic` does not allow (?) use of integer naming.
+
+    The calander or related class should be able to handle the value
+    :attr:`D#` by converting the name like:
+
+    .. code-block:: python
+
+        int("D#".replace("D", ""))
+
+    Alternatively, the class can directly call the value of :attr:`D#`
+    for a particular mapping ENUM class (todo).
     """
 
     days : set[ENUMDays] = {
         ENUMDays.SUNDAY,
         ENUMDays.SATURDAY
     }
+
+    # for each week for a day <int("D#".replace("D", ""))> check
+    # if the weekly off is valid, example every alternate Saturday
+    D0 : tuple[bool] = tuple([True] * 5)
+    D1 : tuple[bool] = tuple([True] * 5)
+    D2 : tuple[bool] = tuple([True] * 5)
+    D3 : tuple[bool] = tuple([True] * 5)
+    D4 : tuple[bool] = tuple([True] * 5)
+    D5 : tuple[bool] = tuple([True] * 5)
+    D6 : tuple[bool] = tuple([True] * 5)
 
 
 class CustomLeaveConstraint(BaseModel):
