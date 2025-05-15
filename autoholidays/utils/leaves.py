@@ -18,6 +18,7 @@ defination of leaves which can be extended to the API module.
 from enum import Enum
 
 from pydantic import (
+    Field,
     BaseModel,
     computed_field,
     field_validator
@@ -73,6 +74,19 @@ class ENUMDays(Enum):
                 ", ".join([str(day.value) for day in cls])
             )
         )
+
+
+class MonthDayConstruct(BaseModel):
+    """
+    Create a Month-Day Constructor for Various Usages
+
+    The construct allows to define the day and month without the year
+    value. Thus, the class can be dynamically unpacked to the module
+    :mod:`datetime` to iterate over a range of dynamic year value.
+    """
+
+    day : int = Field(ge = 1, le = 31)
+    month : int = Field(ge = 1, le = 12)
 
 
 class CompWeeklyLeave(BaseModel):
@@ -234,18 +248,81 @@ class CustomLeaveConstraint(BaseModel):
 
 class CustomLeaves(BaseModel):
     """
-    A Custom Leaves Schema Definition
+    A Custom Leaves Schema Base Model Construct Definition
 
     A custom leave is any type of a named leave that a user can take,
-    based on the organization policy. The custom leaves base model
-    also allow to put any type of leave constraint on the leave days.
+    based on the organization policy. Various attributes are associated
+    with a leave giving the flexibility of dynamic calculation and
+    advanced usages like constraints, etc.
 
     :type  name: str
     :param name: A string representing the name of the custom leave.
         The name should be a valid string and should not be empty.
+
+    :type  max_balance: int
+    :param max_balance: The maximum balance of the leave on for the
+        given cycle. Defaults to float("inf"), i.e., no limit.
+
+    :type  n_credit_md: list[MonthDayConstruct]
+    :param n_credit_md: A list of :class:`MonthDayConstruct` objects
+        representing the credit days for the leave. Defaults to
+        [MonthDayConstruct(day = 1, month = 1)].
+
+    :type  n_expiry_md: list[MonthDayConstruct]
+    :param n_expiry_md: A list of :class:`MonthDayConstruct` objects
+        representing the expiry days for the leave. Defaults to
+        [MonthDayConstruct(day = 31, month = 12)].
+
+    :type  n_credit_balance: list[int]
+    :param n_credit_balance: A list of integers representing the credit
+        balance for each credit day. Defaults to [24], i.e., 24 leaves
+        to be credited on dt.date(year, 1, 1).
+
+    :type  carry_forward_balance: int
+    :param carry_forward_balance: The attribute is applicable for
+        leaves that can be carry forwarded to the next cycle, else
+        ignored. Defaults to 0. The number represents the amount of
+        leaves an user wish to carry forward to the next cycle. This
+        attribute is particularly helpful in case of multi-cycle or
+        over-lapping cycle leaves.
+
+    Carry Forward Leaves
+    --------------------
+
+    The carry forward leaves maybe useful when a user plans for more
+    than one cycle, or there is an overlapping cycle between more than
+    one user in planing cycle.
+
+    .. code-block:: text
+
+        PERSON A : Leave Cycle = dt.date(year, 1, 1) to dt.date(year, 12, 31)
+        PERSON B : Leave Cycle = dt.date(year, 4, 1) to dt.date(year + 1, 3, 31)
+
+    We can observe that there is an overlapping cycle for the two user
+    when comparing two leave different leave cycle. Thus, if we are
+    planning for the period - we may want to preserve the carry
+    forward leaves to make a better planning.
     """
 
     name : str
+
+    # number of max. leave balance that can be accumulated in a cycle
+    max_balance : int = Field(float("inf"), ge = 0)
+
+    # credit and expiry dates, dt.date object only
+    n_credit_md : list[MonthDayConstruct] = [MonthDayConstruct(day = 1, month = 1)]
+    n_expiry_md : list[MonthDayConstruct] = [MonthDayConstruct(day = 31, month = 12)]
+
+    # set credit values for each leave credit day
+    n_credit_balance : list[int] = Field(
+        [24],
+        min_length = len(n_credit_md),
+        max_length = len(n_credit_md)
+    )
+
+    # for leaves with carry forward (cf), add desired cf balance
+    carry_forward_balance : int = Field(0, ge = 0)
+
 
     @computed_field
     @property
@@ -259,3 +336,9 @@ class CustomLeaves(BaseModel):
         """
 
         return "".join([word[0] for word in self.name.split()]).upper()
+
+
+    @field_validator("n_credit_balance")
+    @classmethod
+    def __validate_credit_balance__(cls, values : list[int]) -> list[int]:
+        assert min(values) >= 0, "`%s` must be non-negative" % values
