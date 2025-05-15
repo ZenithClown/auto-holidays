@@ -27,9 +27,32 @@ class PersonConstruct(BaseModel):
     The person constuct is defined considering defualt attributes and
     properties which might be required to find the optimal holidays.
 
+    The person construct should be defined as per the planning cycle,
+    thus the year-month and days should be constant. This is because,
+    for each cycle the holidays and type of leaves can differ, but
+    we can create an extended class to track historic leaves - which
+    is out of scope of this package and should be handled seperately.
+
     :type  name: str
     :param name: A string representing the name of the person, this
         can be anything can beused to save the object.
+
+    :type  cycle: LeaveCycle
+    :param cycle: A :class:`LeaveCycle` object which defines the
+        leave planning cycle for a person.
+
+    :type  comp_week_off: CompWeeklyLeave
+    :param comp_week_off: A :class:`CompWeeklyLeave` object which
+        defines the compulsary weekly leaves for a person.
+
+    :type  custom_leaves: tuple[CustomLeaves]
+    :param custom_leaves: A tuple of :class:`CustomLeaves` objects
+        which defines the custom leaves for a person.
+
+    :type  additional_holidays: tuple[dt.date]
+    :param additional_holidays: A tuple of :class:`dt.date` objects
+        which defines the additional holidays for a person for the
+        given planning cycle.
     """
 
     name : str
@@ -41,4 +64,7 @@ class PersonConstruct(BaseModel):
 
     # now we can define the leaves for the person
     comp_week_off = CompWeeklyLeave()
-    custom_leaves = list[CustomLeaves]
+    custom_leaves = tuple[CustomLeaves]
+
+    # additional assigned holidays
+    additional_holidays = tuple[dt.date]
