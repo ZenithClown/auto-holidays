@@ -56,6 +56,14 @@ class PersonConstruct(BaseModel):
         objects which defines the additional holidays for a person
         for the given planning cycle. Check class attributes for field
         names and their descriptions.
+
+    :type  required_leaves: tuple[HolidayConstruct]
+    :param required_leaves: A tuple of :class:`HolidayConstruct`
+        objects which defines the required leaves for a person
+        for the given planning cycle. Check class attributes for field
+        names and their descriptions. A required leave are the days
+        where the person has to take a leave - and this will be an
+        indicative/suggestion to the planner.
     """
 
     name : str
@@ -71,3 +79,6 @@ class PersonConstruct(BaseModel):
 
     # additional assigned holidays
     additional_holidays : tuple[HolidayConstruct]
+
+    # required leave on days
+    required_leaves : tuple[HolidayConstruct] = tuple()
