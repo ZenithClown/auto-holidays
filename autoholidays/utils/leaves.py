@@ -16,7 +16,7 @@ from pydantic import (
     field_validator
 )
 
-from autoholidays.errors import InvalidLeaveDays
+from autoholidays.errors import InvalidDayNum
 
 
 class ENUMDays(Enum):
@@ -51,6 +51,21 @@ class ENUMDays(Enum):
     FRIDAY    = 4
     SATURDAY  = 5
     SUNDAY    = 6
+
+
+    @classmethod
+    def __override_error__(cls, value) -> None:
+        """
+        Raise an Custom Error if the Value is not in Range
+        """
+
+        raise InvalidDayNum(
+            "`%r` is not a Valid `%s`. Valid Values: `%s`" % (
+                value,
+                cls.__name__,
+                ", ".join([str(day.value) for day in cls])
+            )
+        )
 
 
 class WeeklyLeave(BaseModel):
