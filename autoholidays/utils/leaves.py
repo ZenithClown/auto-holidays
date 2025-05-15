@@ -68,9 +68,9 @@ class ENUMDays(Enum):
         )
 
 
-class WeeklyLeave(BaseModel):
+class CompWeeklyLeave(BaseModel):
     """
-    Weekly-Off Leave Schema/Construct Definition
+    Compulsory Weekly-Off Leave Schema/Construct Definition
 
     The weekly leave schema defines the days of the week when a user
     has a holiday. The days are typically Sunday and Saturday, and
@@ -79,8 +79,7 @@ class WeeklyLeave(BaseModel):
     :type  days: set[ENUMDays]
     :param days: A set of :class:`ENUMDays` enum values representing
         the days of the week when a user has a holiday. The days are
-        typically Sunday and Saturday, and is same as the weekly off.
-        Defaults to Saturday and Sunday.
+        typically Sunday and Saturday, default value.
 
     Example Usage
     -------------
@@ -97,12 +96,22 @@ class WeeklyLeave(BaseModel):
         cur_date = dt.date(2025, 5, 4)
 
         # let's define the weekly leave construct with defaults
-        weekly = ah.utils.WeeklyLeave()
+        weekly = ah.utils.CompWeeklyLeave()
         dayset = set([day.value for day in weekly.days])
 
         # check for each day if it is a weekly-off day or not
         print(f"Weekly Off: {cur_date.weekday() in dayset}")
         >> Weekly Off: True
+
+    To set an custom value for a user's compulsory weekly off, use
+    the set dictionary expansion like:
+
+    .. code-block:: python
+
+        weekly = ah.utils.CompWeeklyLeave(days={ENUMDays.SUNDAY})
+
+    TODO: Add a feature to set alternate days of the week as holiday,
+    example, add every 1st- and 3rd- Saturday as holiday.
 
     Leave Days Calculation
     ----------------------
