@@ -15,8 +15,6 @@ The module uses the :mod:`pydantic` and :mod:`enum` for a structured
 defination of leaves which can be extended to the API module.
 """
 
-import datetime as dt
-
 from pydantic import (
     Field,
     BaseModel,
