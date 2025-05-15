@@ -210,8 +210,8 @@ class CustomLeaveConstraint(BaseModel):
 
     # allow to put a boundary of leave, like PL >= 4 days at a time
     # or, PL can be applied only twice a year (or a cycle)
-    avail_limit : LRBoundary
-    avail_limit_per_cycle : LRBoundary
+    avail_limit : LRBoundary = LRBoundary()
+    avail_limit_per_cycle : LRBoundary = LRBoundary()
 
     # only valid for the a set of days
     limit_to_dates : set[MonthDayConstruct] = set()
