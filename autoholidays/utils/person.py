@@ -73,10 +73,10 @@ class PersonConstruct(BaseModel):
 
     # now we can define the leaves for the person
     comp_week_off : CompWeeklyLeave = CompWeeklyLeave()
-    custom_leaves : tuple[CustomLeaves] = tuple()
+    custom_leaves : list[CustomLeaves] = list()
 
     # additional assigned holidays
-    additional_holidays : tuple[HolidayConstruct] = tuple()
+    additional_holidays : list[HolidayConstruct] = list()
 
     # required leave on days
-    required_leaves : tuple[HolidayConstruct] = tuple()
+    required_leaves : list[HolidayConstruct] = list()
