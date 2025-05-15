@@ -67,17 +67,16 @@ class PersonConstruct(BaseModel):
 
     name : str
     cycle : AnyCycle = AnyCycle(
-        year = dt.date.today().year,
-        _s = MonthDayConstruct(day = 1, month = 1),
-        _e = MonthDayConstruct(day = 31, month = 12)
+        s = MonthDayConstruct(day = 1, month = 1),
+        e = MonthDayConstruct(day = 31, month = 12)
     )
 
     # now we can define the leaves for the person
     comp_week_off : CompWeeklyLeave = CompWeeklyLeave()
-    custom_leaves : tuple[CustomLeaves]
+    custom_leaves : tuple[CustomLeaves] = tuple()
 
     # additional assigned holidays
-    additional_holidays : tuple[HolidayConstruct]
+    additional_holidays : tuple[HolidayConstruct] = tuple()
 
     # required leave on days
     required_leaves : tuple[HolidayConstruct] = tuple()

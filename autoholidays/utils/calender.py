@@ -83,24 +83,24 @@ class AnyCycle(BaseModel):
     Create a Cycle Base Validation Model
     """
 
-    _s : MonthDayConstruct
-    _e : MonthDayConstruct
+    s : MonthDayConstruct
+    e : MonthDayConstruct
 
-    year : int
+    year : int = dt.date.today().year
 
 
     @computed_field
     @property
     def start(self) -> dt.date:
-        return dt.date(self.year, self._s.month, self._s.day)
+        return dt.date(self.year, self.s.month, self.s.day)
 
 
     @computed_field
     @property
     def end(self) -> dt.date:
         return dt.date(
-            self.year if self._s.month <= self._e.month else self.year + 1,
-            self._e.month, self._e.day
+            self.year if self.s.month <= self.e.month else self.year + 1,
+            self.e.month, self.e.day
         )
 
     @computed_field
