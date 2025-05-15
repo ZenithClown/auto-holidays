@@ -4,7 +4,7 @@
 Capture and Define Custom Errors for Package
 """
 
-class InvalidLeaveDays(ValueError):
+class InvalidDayNum(ValueError):
     """
     Invalid Leave Days Error
 
