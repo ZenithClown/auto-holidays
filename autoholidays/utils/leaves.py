@@ -1,11 +1,18 @@
 # -*- encoding: utf-8 -*-
 
 """
-A Schema to Establish the Leaves of a User
+An Utility ENUM & Pydantic Base Model for Leaves
 
-A person typically have two types of leaves - weekly leave and other
-leaves like sick leave, casual leave, etc. This schema is used to
-establish the leaves of a user.
+The module defines a standard way to define a leave for an user. The
+different functionality includes:
+
+    * :class:`CompWeeklyLeave` - a process to define compulsary weekly
+        leaves for an user. The defination allows to fetch the days
+        which are holidays and in sync with other leaves can calculate
+        long weekends.
+
+The module uses the :mod:`pydantic` and :mod:`enum` for a structured
+defination of leaves which can be extended to the API module.
 """
 
 from enum import Enum
