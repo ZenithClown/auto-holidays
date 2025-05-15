@@ -33,4 +33,5 @@ if missing_dependencies:
     raise ImportError(f"Missing hard dependencies: {missing_dependencies}")
 
 # init-time Option Registrations
+from autoholidays import core
 from autoholidays import utils
