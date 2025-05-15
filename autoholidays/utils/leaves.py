@@ -108,7 +108,15 @@ class CompWeeklyLeave(BaseModel):
 
     .. code-block:: python
 
-        weekly = ah.utils.CompWeeklyLeave(days={ENUMDays.SUNDAY})
+        # setting values by using the enum name property
+        weekly = ah.utils.CompWeeklyLeave(days={
+            ah.utils.ENUMDays.SUNDAY
+        })
+
+        # setting values by using the enum value property
+        weekly = ah.utils.CompWeeklyLeave(days = {
+            ah.utils.ENUMDays(6)
+        })
 
     TODO: Add a feature to set alternate days of the week as holiday,
     example, add every 1st- and 3rd- Saturday as holiday.
