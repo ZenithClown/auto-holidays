@@ -176,6 +176,7 @@ class LeavePlanner:
 
         # keyword arguments, define min_toleralce - only for verbose
         min_count = kwargs.get("min_count", 2)
+        values_in_subgroups = kwargs.get("values_in_subgroups", False)
 
         weekends = {person.name : None for person in self.persons}
 
@@ -199,7 +200,9 @@ class LeavePlanner:
                 f"VACATION #{str(idx + 1).zfill(3)}" : dict(
                     start = group[0], end = group[-1],
                     duration = (group[-1] - group[0]).days + 1,
-                    values = list(dt_.date_range(group[0], group[-1]))
+                    values = \
+                        list(dt_.date_range(group[0], group[-1]))
+                        if values_in_subgroups else None
                 )
                 for idx, group in enumerate(groups)
                 if len(group) >= min_count
